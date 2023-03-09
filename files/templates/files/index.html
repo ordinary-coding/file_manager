@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>文件列表</title>
+    <link rel="stylesheet" href="{% static 'files/style/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'files/style/app.css' %}">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row action-btn">
+        <div class="col-md-12">
+            <a href="/files/upload?save_path={{ full_path }}" class="btn btn-primary">上传文件</a>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">
+              新建文件夹
+            </button>
+            {% if prev_dir != None %}
+                <a type="button" class="btn btn-info" href="/files/?full_path={{ prev_dir }}">返回上一层</a>
+            {% endif %}
+        </div>
+    </div>
+    <div>
+        {% for file in files %}
+            {% if file.type == 'D' %}
+                <div class="file">
+                    <div>
+                        <a href="/files/?full_path={{ file.full_path }}">
+                            <img src="{% static 'files/dir.png' %}" title="{{ file.name }}" alt="{{ file.name }}" style="width: 100px;">
+                        </a>
+                        </div>
+                    <div>{{ file.name }}</div>
+                </div>
+            {% else %}
+                <div class="file">
+                    <div>
+                        <a href="{% static file.full_path %}" target="_blank">
+                            <img src="{% static 'files/file.png' %}" title="{{ file.name }}" alt="{{ file.name }}" style="width: 100px;">
+                        </a>
+                    </div>
+                    <div>{{ file.name }}</div>
+                </div>
+            {% endif %}
+
+        {% endfor %}
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">新建文件夹</h4>
+      </div>
+      <div class="modal-body">
+          <form action="/files/mkdir/" method="post" id="mkdir_form">
+               {% csrf_token %}
+                <div class="form-group">
+                    <label for="dir-name">目录名称</label>
+                    <input type="text" class="form-control" id="dir-name" name="dir_name" placeholder="请输入文件夹名称">
+                    <input type="hidden" value="{{ full_path }}" id="current_path" name="current_path">
+                </div>
+            </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" onclick="$('#mkdir_form').submit()">确认</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+<script src="{% static 'files/js/jquery.min.js' %}"></script>
+<script src="{% static 'files/js/bootstrap.min.js' %}"></script>
+</html>

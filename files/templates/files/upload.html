@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>上载文件</title>
+    <link rel="stylesheet" href="{% static 'files/style/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'files/style/app.css' %}">
+</head>
+<body>
+    <div class="container">
+
+        <div class="upload-container">
+
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#local" aria-controls="local" role="tab" data-toggle="tab">本地上传</a></li>
+            <li role="presentation"><a href="#youtube" aria-controls="youtube" role="tab" data-toggle="tab">下载YouTube</a></li>
+          </ul>
+
+          <!-- Tab panes -->
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="local">
+                <form method="post" action="/files/upload_action/" enctype="multipart/form-data">
+                    {% csrf_token %}
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">标题</label>
+                    <input type="text" class="form-control" id="file_name" name="file_name" placeholder="文件标题">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputFile">选择文件</label>
+                    <input type="file" id="upload_file" name="upload_file">
+                    <p class="help-block">标题可不填，将保留原始文件名.</p>
+                  </div>
+                    <div class="form-group">
+                        <input type="hidden" name="save_path" value="{{ save_path }}">
+                    </div>
+
+                  <button type="submit" class="btn btn-primary">确认</button>
+                </form>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="youtube">
+                <form class="form-inline">
+                    {% csrf_token %}
+                  <div class="form-group" >
+                    <label for="exampleInputName2">YouTube链接</label>
+                    <input type="text" class="form-control" id="youtube-link" placeholder="YouTube链接">
+                  </div>
+                    <div class="form-group">
+                        <input type="hidden" name="save_path" value="{{ save_path }}">
+                    </div>
+                  <button type="button" class="btn btn-primary">下载</button>
+                </form>
+            </div>
+          </div>
+        </div>
+
+    </div>
+</body>
+<script src="{% static 'files/js/jquery.min.js' %}"></script>
+<script src="{% static 'files/js/bootstrap.min.js' %}"></script>
+</html>
